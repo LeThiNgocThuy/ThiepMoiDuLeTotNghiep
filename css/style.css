@@ -216,13 +216,73 @@ section {
   color: #555;
   margin-bottom: 20px;
   font-weight: 500;
+  line-height: 1.8;
+}
+
+.info-time-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.info-time-label strong {
+  color: #8b6f47;
+  font-weight: 700;
+}
+
+.info-date-value {
+  display: block;
+  margin-top: 5px;
+  padding-left: 0;
+  /* Căn lề bằng với "15h00" - tính toán padding để căn với vị trí số */
+  text-indent: 0;
+}
+
+/* Căn lề ngày tháng bằng với "15h00" */
+.info-date {
+  position: relative;
+}
+
+/* Sử dụng padding-left để căn với vị trí "15h00" */
+.info-time-label {
+  position: relative;
+}
+
+.info-date-value {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.info-date-value strong {
+  color: #8b6f47;
+  font-weight: 700;
+  font-size: clamp(17px, 3.2vw, 21px);
 }
 
 .info-location {
   font-size: clamp(15px, 2.8vw, 18px);
   color: #555;
-  margin-bottom: 20px;
-  line-height: 1.6;
+  margin-bottom: 15px;
+  line-height: 1.8;
+}
+
+.location-item {
+  display: inline-block;
+  color: #8b6f47;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 5px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.location-item:hover {
+  color: #b07a3c;
+  border-bottom-color: #b07a3c;
+  transform: translateX(5px);
+}
+
+.location-item:active {
+  transform: translateX(3px);
 }
 
 /* Calendar Widget */

@@ -110,9 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Open Directions function
-function openDirections() {
-  const address = encodeURIComponent('Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế');
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
+function openDirections(address) {
+  // Nếu không có địa chỉ, dùng địa chỉ mặc định
+  const targetAddress = address || 'Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế';
+  const encodedAddress = encodeURIComponent(targetAddress);
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
   window.open(googleMapsUrl, '_blank');
 }
 

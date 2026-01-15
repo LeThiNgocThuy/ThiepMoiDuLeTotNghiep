@@ -37,7 +37,10 @@
         <span class="info-icon">⏰</span>
         <h5>Thời gian:</h5>
       </div>
-      <p class="info-date">Vào lúc: 15h00, Thứ 6, Ngày 23/01/2026</p>
+      <p class="info-date">
+        <span class="info-time-label"> <strong>Vào lúc: 15h00</strong></span>
+        <span class="info-date-value"><strong>Thứ 6, Ngày 23/01/2026</strong></span>
+      </p>
       <div class="calendar-widget" id="calendar"></div>
     </div>
     
@@ -46,8 +49,17 @@
         <span class="info-icon">📍</span>
         <h5>Địa chỉ:</h5>
       </div>
-      <p class="info-location">Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế</p>
-      <button class="btn-directions" onclick="openDirections()">XEM CHỈ ĐƯỜNG</button>
+      <p class="info-location">
+        <strong class="location-item" onclick="openDirections('Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế')">
+          📍 Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế
+        </strong>
+      </p>
+      <p class="info-location">
+        <strong class="location-item" onclick="openDirections('102 Phùng Hưng, Phường Thuận Thành, Thành Phố Huế')">
+          📍 102 Phùng Hưng, Phường Thuận Thành, Thành Phố Huế
+        </strong>
+      </p>
+      <button class="btn-directions" onclick="openDirections('Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế')">XEM CHỈ ĐƯỜNG</button>
     </div>
     
     <div class="contact-info" data-aos="fade-up" data-aos-delay="300">
