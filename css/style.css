@@ -7,32 +7,15 @@
 
 html {
   scroll-behavior: smooth;
-  /* Tối ưu scroll performance */
-  -webkit-overflow-scrolling: touch;
-  /* Giảm jank khi scroll */
-  overflow-x: hidden;
-  /* Tối ưu touch scrolling trên mobile */
-  touch-action: pan-y;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #fffaf3 0%, #f7efe5 100%);
-  /* Tối ưu rendering */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
   color: #333;
   overflow-x: hidden;
   line-height: 1.6;
-  /* Tối ưu touch scrolling */
-  touch-action: pan-y;
-  /* Giảm lag khi scroll trên mobile */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
 }
 
 /* Hero Section */
@@ -45,13 +28,6 @@ body {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  /* Tối ưu parallax performance */
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  /* Tối ưu touch scrolling */
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
 }
 
 .hero::before {
@@ -176,9 +152,6 @@ section {
   padding: 60px 20px;
   text-align: center;
   position: relative;
-  /* Tối ưu scroll performance */
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 /* Info Section */
@@ -650,44 +623,8 @@ section {
   min-height: 150px;
 }
 
-/* Mobile Gallery Layout - Tối ưu scroll performance */
+/* Mobile Gallery Layout */
 @media (max-width: 768px) {
-  /* Tối ưu scroll trên mobile */
-  html {
-    scroll-behavior: auto !important; /* Tắt smooth scroll trên mobile để mượt hơn */
-  }
-  
-  body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    /* Tắt các hiệu ứng không cần thiết */
-    transform: translateZ(0);
-  }
-  
-  /* Tắt parallax và các hiệu ứng phức tạp */
-  .hero {
-    transform: translate3d(0, 0, 0) !important;
-    will-change: auto !important;
-    transition: none !important;
-  }
-  
-  section {
-    transform: translate3d(0, 0, 0) !important;
-    will-change: auto !important;
-    transition: none !important; /* Tắt transition trên mobile để mượt hơn */
-  }
-  
-  /* Tối ưu các elements khác */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Giảm animation trên mobile */
-  [data-aos] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
   .gallery-layout {
     padding: 0 5px;
   }
@@ -1071,9 +1008,6 @@ footer {
     padding: 40px 15px;
     min-height: auto;
     padding-top: 60px;
-    /* Tắt parallax trên mobile */
-    transform: translate3d(0, 0, 0) !important;
-    will-change: auto;
   }
   
   .avatar-wrapper {
@@ -1083,9 +1017,6 @@ footer {
   
   section {
     padding: 40px 15px;
-    /* Tối ưu cho mobile */
-    transform: translate3d(0, 0, 0);
-    will-change: auto;
   }
   
   .info {

@@ -1,19 +1,11 @@
-// Initialize AOS (Animate On Scroll) - Tắt trên mobile để mượt hơn
-const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
-if (!isMobile) {
-  AOS.init({
-    duration: 1000,
-    once: true,
-    offset: 100,
-    easing: 'ease-out-cubic',
-    delay: 0
-  });
-} else {
-  // Trên mobile: disable AOS để tăng performance
-  AOS.init({
-    disable: true
-  });
-}
+// Initialize AOS (Animate On Scroll)
+AOS.init({
+  duration: 1000,
+  once: true,
+  offset: 100,
+  easing: 'ease-out-cubic',
+  delay: 0
+});
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -29,40 +21,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Parallax effect for hero section (disabled on mobile for better performance)
-let ticking = false;
-function updateParallax() {
-  // Tắt parallax trên mobile để tránh lag
-  const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
-  if (isMobile) {
-    const hero = document.querySelector('.hero');
-    if (hero) {
-      hero.style.transform = 'translate3d(0, 0, 0)';
-    }
-    ticking = false;
-    return;
-  }
-  
+// Parallax effect for hero section
+window.addEventListener('scroll', () => {
   const scrolled = window.pageYOffset;
   const hero = document.querySelector('.hero');
   if (hero) {
-    // Giảm hiệu ứng parallax và dùng translate3d để tối ưu GPU
-    const rate = scrolled * 0.2;
-    hero.style.transform = `translate3d(0, ${rate}px, 0)`;
+    const rate = scrolled * 0.5;
+    hero.style.transform = `translateY(${rate}px)`;
   }
-  ticking = false;
-}
-
-// Chỉ enable parallax trên desktop
-const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
-if (!isMobile) {
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateParallax);
-      ticking = true;
-    }
-  }, { passive: true });
-}
+});
 
 // Calendar Widget
 function initCalendar() {
@@ -573,49 +540,26 @@ rippleStyle.textContent = `
 `;
 document.head.appendChild(rippleStyle);
 
-// Intersection Observer for fade-in animations (optimized for mobile)
-const isMobileDevice = window.innerWidth <= 768 || 'ontouchstart' in window;
-
+// Intersection Observer for fade-in animations
 const observerOptions = {
-  threshold: 0.05,
-  rootMargin: '0px 0px -30px 0px'
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      // Trên mobile: hiển thị ngay không animation để mượt hơn
-      if (isMobileDevice) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translate3d(0, 0, 0)';
-        entry.target.style.transition = 'none';
-      } else {
-        // Trên desktop: có animation mượt mà
-        requestAnimationFrame(() => {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translate3d(0, 0, 0)';
-        });
-      }
-      // Unobserve sau khi đã animate để giảm tải
-      observer.unobserve(entry.target);
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
     }
   });
 }, observerOptions);
 
 // Observe all sections
 document.querySelectorAll('section').forEach(section => {
-  if (isMobileDevice) {
-    // Trên mobile: hiển thị ngay, không animation
-    section.style.opacity = '1';
-    section.style.transform = 'translate3d(0, 0, 0)';
-    section.style.transition = 'none';
-  } else {
-    // Trên desktop: có animation
-    section.style.opacity = '0';
-    section.style.transform = 'translate3d(0, 20px, 0)';
-    section.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-    section.style.willChange = 'opacity, transform';
-  }
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(20px)';
+  section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   observer.observe(section);
 });
 
