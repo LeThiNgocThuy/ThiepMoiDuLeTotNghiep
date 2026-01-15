@@ -45,7 +45,11 @@ function initCalendar() {
   const weekdays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
   
   function renderCalendar() {
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    // getDay() trả về: 0=CN, 1=T2, 2=T3, 3=T4, 4=T5, 5=T6, 6=T7
+    // Cần chuyển đổi: 0->6, 1->0, 2->1, 3->2, 4->3, 5->4, 6->5
+    const firstDay = firstDayOfMonth.getDay();
+    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Chủ nhật (0) -> 6, các ngày khác -1
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const today = new Date();
     
@@ -65,7 +69,7 @@ function initCalendar() {
     `;
     
     // Empty cells for days before month starts
-    for (let i = 0; i < firstDay; i++) {
+    for (let i = 0; i < adjustedFirstDay; i++) {
       html += `<div class="calendar-day other-month"></div>`;
     }
     
