@@ -7,12 +7,22 @@
 
 html {
   scroll-behavior: smooth;
+  /* Tối ưu scroll performance */
+  -webkit-overflow-scrolling: touch;
+  /* Giảm jank khi scroll */
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #fffaf3 0%, #f7efe5 100%);
+  /* Tối ưu rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
   color: #333;
   overflow-x: hidden;
   line-height: 1.6;
@@ -28,6 +38,10 @@ body {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  /* Tối ưu parallax performance */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .hero::before {
@@ -152,6 +166,9 @@ section {
   padding: 60px 20px;
   text-align: center;
   position: relative;
+  /* Tối ưu scroll performance */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Info Section */

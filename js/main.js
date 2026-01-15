@@ -21,15 +21,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
+// Parallax effect for hero section (optimized with requestAnimationFrame)
+let ticking = false;
+function updateParallax() {
   const scrolled = window.pageYOffset;
   const hero = document.querySelector('.hero');
   if (hero) {
-    const rate = scrolled * 0.5;
-    hero.style.transform = `translateY(${rate}px)`;
+    // Giảm hiệu ứng parallax và dùng translate3d để tối ưu GPU
+    const rate = scrolled * 0.25;
+    hero.style.transform = `translate3d(0, ${rate}px, 0)`;
   }
-});
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    window.requestAnimationFrame(updateParallax);
+    ticking = true;
+  }
+}, { passive: true });
 
 // Calendar Widget
 function initCalendar() {
@@ -540,17 +550,22 @@ rippleStyle.textContent = `
 `;
 document.head.appendChild(rippleStyle);
 
-// Intersection Observer for fade-in animations
+// Intersection Observer for fade-in animations (optimized)
 const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
+  threshold: 0.05,
+  rootMargin: '0px 0px -30px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
+      // Sử dụng requestAnimationFrame để animation mượt hơn
+      requestAnimationFrame(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translate3d(0, 0, 0)';
+      });
+      // Unobserve sau khi đã animate để giảm tải
+      observer.unobserve(entry.target);
     }
   });
 }, observerOptions);
@@ -558,8 +573,9 @@ const observer = new IntersectionObserver((entries) => {
 // Observe all sections
 document.querySelectorAll('section').forEach(section => {
   section.style.opacity = '0';
-  section.style.transform = 'translateY(20px)';
-  section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  section.style.transform = 'translate3d(0, 20px, 0)';
+  section.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+  section.style.willChange = 'opacity, transform';
   observer.observe(section);
 });
 
