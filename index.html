@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tốt Nghiệp Ngọc Thúy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" data-aos="fade-up">
+  <div class="hero-content">
+    <div class="graduation-icon" data-aos="fade-down" data-aos-delay="50">🎓</div>
+    <h1 data-aos="fade-down" data-aos-delay="100">Thiệp mời Chụp ảnh <span class="highlight">Tốt Nghiệp</span></h1>
+    <div class="avatar-wrapper" data-aos="zoom-in" data-aos-delay="200">
+      <img src="image/Anh2.JPG" class="avatar">
+    </div>
+    <h2 data-aos="fade-up" data-aos-delay="300">Tốt nghiệp</h2>
+    <p class="name" data-aos="fade-up" data-aos-delay="400">Lê Thị Ngọc Thúy</p>
+    <span class="school" data-aos="fade-up" data-aos-delay="500">Đại Học Nông Lâm - Đại Học Huế</span>
+    <h3 class="invitation-text" data-aos="fade-up" data-aos-delay="600">"Trân trọng mời bạn đến tham dự lễ chụp tốt nghiệp của mình!"</h3>
+  </div>
+</section>
+
+<!-- THÔNG TIN -->
+<section class="info" data-aos="fade-up">
+  <div class="info-container">
+    <h3 class="info-title">🎓 Thông tin</h3>
+    <h4 class="info-subtitle">Thời gian & Địa điểm</h4>
+    
+    <div class="info-section" data-aos="fade-up" data-aos-delay="100">
+      <div class="info-header">
+        <span class="info-icon">⏰</span>
+        <h5>Thời gian:</h5>
+      </div>
+      <p class="info-date">Vào lúc: 15h00, Thứ 6, Ngày 23/01/2026</p>
+      <div class="calendar-widget" id="calendar"></div>
+    </div>
+    
+    <div class="info-section" data-aos="fade-up" data-aos-delay="200">
+      <div class="info-header">
+        <span class="info-icon">📍</span>
+        <h5>Địa chỉ:</h5>
+      </div>
+      <p class="info-location">Nhà Đa Chức Năng, Trường Đại Học Nông Lâm - Đại Học Huế</p>
+      <button class="btn-directions" onclick="openDirections()">XEM CHỈ ĐƯỜNG</button>
+    </div>
+    
+    <div class="contact-info" data-aos="fade-up" data-aos-delay="300">
+      <p class="hotline">📞 Hotline: <a href="tel:0396810233">0396 810 233</a></p>
+      <p class="facebook">👤 Facebook: <a href="https://web.facebook.com/le.thi.ngoc.thuy.178701" target="_blank">Lê Thị Ngọc Thúy</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ẢNH -->
+<section class="gallery">
+  <h3 class="gallery-title" data-aos="fade-up">📸 Một số khoảnh khắc</h3>
+  <div class="images gallery-layout">
+    <!-- Ảnh lớn ở trên -->
+    <div class="gallery-item featured" data-aos="zoom-in" data-aos-delay="100">
+      <img src="image/Anh1.JPG" alt="Khoảnh khắc 1">
+    </div>
+    <!-- Các ảnh ở dưới: cột trái 1 ảnh dọc lớn, cột phải 2 ảnh dọc nhỏ xếp dọc -->
+    <div class="gallery-bottom">
+      <div class="gallery-left">
+        <div class="gallery-item portrait-large" data-aos="zoom-in" data-aos-delay="200">
+          <img src="image/Anh2.JPG" alt="Khoảnh khắc 2">
+        </div>
+      </div>
+      <div class="gallery-right">
+        <div class="gallery-item portrait-small" data-aos="zoom-in" data-aos-delay="300">
+          <img src="image/Anh3.JPG" alt="Khoảnh khắc 3">
+        </div>
+        <div class="gallery-item portrait-small" data-aos="zoom-in" data-aos-delay="400">
+          <img src="image/Anh1.JPG" alt="Khoảnh khắc 4">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- XÁC NHẬN -->
+<section class="rsvp" data-aos="fade-up">
+  <div class="rsvp-container">
+    <h3 class="rsvp-title" data-aos="fade-up" data-aos-delay="100">💌 Xác nhận tham dự & Lời chúc</h3>
+    <form class="rsvp-form" data-aos="fade-up" data-aos-delay="200" id="rsvpForm">
+      <input type="text" id="guestName" placeholder="Tên của bạn là gì?" required>
+      <textarea id="guestMessage" placeholder="Nhập lời chúc của bạn..." rows="4" required></textarea>
+      <select id="attendance" required>
+        <option value="">-- Bạn có tham dự không? --</option>
+        <option value="yes">Có, tôi sẽ tham dự</option>
+        <option value="maybe">Có thể</option>
+        <option value="no">Không thể tham dự</option>
+      </select>
+      <button type="submit" class="btn-submit">GỬI NGAY!</button>
+    </form>
+    
+    <div class="preview-section" data-aos="fade-up" data-aos-delay="300">
+      <h4 class="preview-title">Xem trước lời chúc của bạn</h4>
+      <div class="preview-content" id="previewContent">
+        <p class="preview-placeholder">Lời chúc của bạn sẽ hiển thị ở đây</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer data-aos="fade-up">
+  <div class="footer-content">
+    <p class="footer-text">Cảm ơn bạn đã ghé thăm! 💖</p>
+    <p class="footer-subtext">Hẹn gặp lại bạn tại buổi lễ!</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- EmailJS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
