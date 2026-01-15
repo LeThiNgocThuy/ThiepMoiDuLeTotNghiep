@@ -103,7 +103,11 @@ function initCalendar() {
 }
 
 // Initialize calendar when page loads
-document.addEventListener('DOMContentLoaded', initCalendar);
+document.addEventListener('DOMContentLoaded', () => {
+  initCalendar();
+  // Load messages khi trang load
+  loadMessages();
+});
 
 // Open Directions function
 function openDirections() {
@@ -119,25 +123,187 @@ const guestNameInput = document.getElementById('guestName');
 const guestMessageInput = document.getElementById('guestMessage');
 const attendanceSelect = document.getElementById('attendance');
 
-// Real-time preview
-if (guestNameInput && guestMessageInput && previewContent) {
-  function updatePreview() {
-    const name = guestNameInput.value.trim();
-    const message = guestMessageInput.value.trim();
-    
-    if (name || message) {
-      previewContent.classList.add('active');
-      previewContent.innerHTML = `
-        <p class="preview-message"><strong>${name || 'Bạn'}</strong>${message ? ': ' + message : ''}</p>
-      `;
-    } else {
-      previewContent.classList.remove('active');
-      previewContent.innerHTML = '<p class="preview-placeholder">Lời chúc của bạn sẽ hiển thị ở đây</p>';
-    }
+// ============================================
+// FIREBASE FUNCTIONS - Load và hiển thị lời chúc
+// ============================================
+
+const messagesList = document.getElementById('messagesList');
+const messagesLoading = document.getElementById('messagesLoading');
+
+// Format thời gian
+function formatTime(timestamp) {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diff = now - date;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  
+  if (minutes < 1) return 'Vừa xong';
+  if (minutes < 60) return `${minutes} phút trước`;
+  if (hours < 24) return `${hours} giờ trước`;
+  if (days < 7) return `${days} ngày trước`;
+  
+  return date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Hiển thị một lời chúc
+function displayMessage(messageData, messageId) {
+  const messageItem = document.createElement('div');
+  messageItem.className = 'message-item';
+  messageItem.setAttribute('data-id', messageId);
+  
+  const attendanceClass = messageData.attendance === 'yes' ? 'yes' : 
+                         messageData.attendance === 'maybe' ? 'maybe' : 'no';
+  const attendanceText = messageData.attendance === 'yes' ? 'Có, sẽ tham dự' : 
+                        messageData.attendance === 'maybe' ? 'Có thể' : 'Không thể tham dự';
+  
+  messageItem.innerHTML = `
+    <div class="message-header">
+      <span class="message-name">${escapeHtml(messageData.name)}</span>
+      <span class="message-attendance ${attendanceClass}">${attendanceText}</span>
+    </div>
+    <p class="message-text">${escapeHtml(messageData.message)}</p>
+    <div class="message-time">${formatTime(messageData.timestamp)}</div>
+  `;
+  
+  return messageItem;
+}
+
+// Escape HTML để tránh XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Load tất cả lời chúc từ Firebase
+function loadMessages() {
+  if (!messagesList) return;
+  
+  // Kiểm tra Firebase đã được cấu hình chưa
+  if (!database || FIREBASE_CONFIG.apiKey === 'YOUR_API_KEY') {
+    messagesLoading.classList.add('hidden');
+    messagesList.innerHTML = '<p class="preview-placeholder">⚠️ Firebase chưa được cấu hình. Vui lòng xem hướng dẫn trong file HUONG_DAN_FIREBASE.md</p>';
+    return;
   }
   
-  guestNameInput.addEventListener('input', updatePreview);
-  guestMessageInput.addEventListener('input', updatePreview);
+  messagesLoading.classList.remove('hidden');
+  
+  const messagesRef = database.ref('messages');
+  
+  // Load messages và sắp xếp theo thời gian (mới nhất trước)
+  messagesRef.orderByChild('timestamp').once('value', (snapshot) => {
+    messagesLoading.classList.add('hidden');
+    messagesList.innerHTML = '';
+    
+    const messages = [];
+    snapshot.forEach((childSnapshot) => {
+      messages.push({
+        id: childSnapshot.key,
+        ...childSnapshot.val()
+      });
+    });
+    
+    // Sắp xếp mới nhất trước
+    messages.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    
+    if (messages.length === 0) {
+      messagesList.innerHTML = '<p class="preview-placeholder">Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc nhé! 💝</p>';
+      return;
+    }
+    
+    messages.forEach((message) => {
+      const messageElement = displayMessage(message, message.id);
+      messagesList.appendChild(messageElement);
+    });
+  });
+  
+  // Listen for new messages in real-time
+  messagesRef.orderByChild('timestamp').limitToLast(1).on('child_added', (snapshot) => {
+    const messageData = snapshot.val();
+    const messageId = snapshot.key;
+    
+    // Kiểm tra xem message đã tồn tại chưa
+    const existingMessage = messagesList.querySelector(`[data-id="${messageId}"]`);
+    if (!existingMessage) {
+      const messageElement = displayMessage(messageData, messageId);
+      messagesList.insertBefore(messageElement, messagesList.firstChild);
+      
+      // Giới hạn số lượng message hiển thị (tùy chọn)
+      const maxMessages = 100;
+      while (messagesList.children.length > maxMessages) {
+        messagesList.removeChild(messagesList.lastChild);
+      }
+    }
+  });
+}
+
+// Lưu lời chúc vào Firebase
+function saveMessageToFirebase(formData) {
+  return new Promise((resolve, reject) => {
+    if (!database || FIREBASE_CONFIG.apiKey === 'YOUR_API_KEY') {
+      reject('Firebase chưa được cấu hình. Vui lòng xem hướng dẫn trong file HUONG_DAN_FIREBASE.md');
+      return;
+    }
+    
+    const messagesRef = database.ref('messages');
+    const newMessageRef = messagesRef.push();
+    
+    const messageData = {
+      name: formData.name,
+      message: formData.message,
+      attendance: formData.attendance,
+      attendanceText: formData.attendanceText,
+      timestamp: Date.now()
+    };
+    
+    newMessageRef.set(messageData)
+      .then(() => {
+        console.log('Message saved to Firebase:', newMessageRef.key);
+        resolve(newMessageRef.key);
+      })
+      .catch((error) => {
+        console.error('Error saving message to Firebase:', error);
+        reject(error);
+      });
+  });
+}
+
+// ============================================
+// FIREBASE CONFIGURATION
+// ============================================
+// Để lưu trữ và hiển thị lời chúc công khai:
+// 1. Truy cập https://console.firebase.google.com/
+// 2. Tạo project mới hoặc chọn project có sẵn
+// 3. Vào Project Settings → General → Your apps → Web app
+// 4. Copy Firebase config và dán vào bên dưới
+// 5. Vào Realtime Database → Create database → Start in test mode
+// 6. Copy Database URL và dán vào databaseURL bên dưới
+// ============================================
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAEczMRSFxYo1sXq8ggp4fNp4d3QulJtKU",
+  authDomain: "thumoithamduletotnghiep.firebaseapp.com",
+  databaseURL: "https://thumoithamduletotnghiep-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "thumoithamduletotnghiep",
+  storageBucket: "thumoithamduletotnghiep.firebasestorage.app",
+  messagingSenderId: "389926271622",
+  appId: "1:389926271622:web:f5c69b98748910e5ba6f07"
+};
+
+// Khởi tạo Firebase
+let database;
+if (typeof firebase !== 'undefined') {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  database = firebase.database();
 }
 
 // ============================================
@@ -222,36 +388,42 @@ if (rsvpForm) {
         attendanceText: attendanceText
       };
       
-      sendEmailViaEmailJS(formData)
+      // Lưu vào Firebase trước
+      saveMessageToFirebase(formData)
+        .then(() => {
+          // Sau đó gửi email (nếu có cấu hình)
+          if (EMAILJS_CONFIG.serviceID !== 'YOUR_SERVICE_ID') {
+            return sendEmailViaEmailJS(formData).catch(err => {
+              console.log('Email không gửi được nhưng đã lưu vào Firebase:', err);
+            });
+          }
+        })
         .then(() => {
           // Thành công
-          showNotification(`Cảm ơn ${name}! Bạn ${attendanceText.toLowerCase()}. Email đã được gửi! 💝`, 'success');
+          showNotification(`Cảm ơn ${name}! Lời chúc của bạn đã được gửi! 💝`, 'success');
           
           // Reset form
           if (guestNameInput) guestNameInput.value = '';
           if (guestMessageInput) guestMessageInput.value = '';
           if (attendanceSelect) attendanceSelect.value = '';
-          if (previewContent) {
-            previewContent.classList.remove('active');
-            previewContent.innerHTML = '<p class="preview-placeholder">Lời chúc của bạn sẽ hiển thị ở đây</p>';
-          }
+          
           submitBtn.textContent = 'GỬI NGAY!';
           submitBtn.disabled = false;
           submitBtn.style.opacity = '1';
+          
+          // Scroll to messages section để xem lời chúc mới
+          setTimeout(() => {
+            const previewSection = document.querySelector('.preview-section');
+            if (previewSection) {
+              previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 500);
         })
         .catch((error) => {
-          // Lỗi - vẫn hiển thị thông báo thành công cho user nhưng log lỗi
-          console.error('Email error:', error);
-          showNotification(`Cảm ơn ${name}! Bạn ${attendanceText.toLowerCase()}. 💝`, 'success');
+          // Lỗi
+          console.error('Error saving message:', error);
+          showNotification('Có lỗi xảy ra. Vui lòng thử lại sau!', 'error');
           
-          // Reset form
-          if (guestNameInput) guestNameInput.value = '';
-          if (guestMessageInput) guestMessageInput.value = '';
-          if (attendanceSelect) attendanceSelect.value = '';
-          if (previewContent) {
-            previewContent.classList.remove('active');
-            previewContent.innerHTML = '<p class="preview-placeholder">Lời chúc của bạn sẽ hiển thị ở đây</p>';
-          }
           submitBtn.textContent = 'GỬI NGAY!';
           submitBtn.disabled = false;
           submitBtn.style.opacity = '1';

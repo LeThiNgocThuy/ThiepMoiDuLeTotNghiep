@@ -16,11 +16,10 @@
 <section class="hero" data-aos="fade-up">
   <div class="hero-content">
     <div class="graduation-icon" data-aos="fade-down" data-aos-delay="50">🎓</div>
-    <h1 data-aos="fade-down" data-aos-delay="100">Thiệp mời Chụp ảnh <span class="highlight">Tốt Nghiệp</span></h1>
+    <h1 data-aos="fade-down" data-aos-delay="100">Thiệp mời Chụp ảnh<br><span class="highlight">Tốt Nghiệp</span></h1>
     <div class="avatar-wrapper" data-aos="zoom-in" data-aos-delay="200">
       <img src="image/Anh2.JPG" class="avatar">
     </div>
-    <h2 data-aos="fade-up" data-aos-delay="300">Tốt nghiệp</h2>
     <p class="name" data-aos="fade-up" data-aos-delay="400">Lê Thị Ngọc Thúy</p>
     <span class="school" data-aos="fade-up" data-aos-delay="500">Đại Học Nông Lâm - Đại Học Huế</span>
     <h3 class="invitation-text" data-aos="fade-up" data-aos-delay="600">"Trân trọng mời bạn đến tham dự lễ chụp tốt nghiệp của mình!"</h3>
@@ -102,9 +101,12 @@
     </form>
     
     <div class="preview-section" data-aos="fade-up" data-aos-delay="300">
-      <h4 class="preview-title">Xem trước lời chúc của bạn</h4>
+      <h4 class="preview-title">💬 Lời chúc của mọi người</h4>
       <div class="preview-content" id="previewContent">
-        <p class="preview-placeholder">Lời chúc của bạn sẽ hiển thị ở đây</p>
+        <div class="messages-loading" id="messagesLoading">
+          <p class="preview-placeholder">Đang tải lời chúc...</p>
+        </div>
+        <div class="messages-list" id="messagesList"></div>
       </div>
     </div>
   </div>
@@ -120,6 +122,9 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <!-- EmailJS -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

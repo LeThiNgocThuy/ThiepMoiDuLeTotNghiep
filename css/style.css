@@ -473,13 +473,7 @@ section {
 
 
 /* Đảm bảo 2-3 ảnh nhỏ bằng 1 ảnh to */
-.gallery-item.frame-small + .gallery-item.frame-small {
-  /* 2 ảnh nhỏ cạnh nhau = 1 ảnh to */
-}
-
-.gallery-item.frame-tiny + .gallery-item.frame-tiny + .gallery-item.frame-tiny {
-  /* 3 ảnh nhỏ = 1 ảnh to */
-}
+/* Styles đã được xử lý trong các class khác */
 
 .gallery-item.small-in-frame {
   width: 100%;
@@ -784,6 +778,124 @@ section {
   line-height: 1.8;
   color: #555;
   white-space: pre-wrap;
+}
+
+/* Messages List */
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.messages-list:empty::before {
+  content: "Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc nhé! 💝";
+  display: block;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.message-item {
+  background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+  border-radius: 12px;
+  padding: 18px 20px;
+  border-left: 4px solid #b07a3c;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeInUp 0.4s ease;
+}
+
+.message-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.message-name {
+  font-weight: 600;
+  color: #8b6f47;
+  font-size: clamp(16px, 2.5vw, 18px);
+}
+
+.message-attendance {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: clamp(12px, 2vw, 14px);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.message-attendance.yes {
+  background: #4caf50;
+  color: white;
+}
+
+.message-attendance.maybe {
+  background: #ff9800;
+  color: white;
+}
+
+.message-attendance.no {
+  background: #f44336;
+  color: white;
+}
+
+.message-text {
+  color: #555;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  font-size: clamp(14px, 2.2vw, 16px);
+}
+
+.message-time {
+  font-size: clamp(11px, 1.8vw, 12px);
+  color: #999;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.messages-loading {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+
+.messages-loading.hidden {
+  display: none;
+}
+
+/* Scrollbar styling for messages list */
+.messages-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.messages-list::-webkit-scrollbar-thumb {
+  background: #b07a3c;
+  border-radius: 10px;
+}
+
+.messages-list::-webkit-scrollbar-thumb:hover {
+  background: #8b6f47;
 }
 
 /* Footer */
