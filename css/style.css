@@ -11,6 +11,8 @@ html {
   -webkit-overflow-scrolling: touch;
   /* Giảm jank khi scroll */
   overflow-x: hidden;
+  /* Tối ưu touch scrolling trên mobile */
+  touch-action: pan-y;
 }
 
 body {
@@ -26,6 +28,11 @@ body {
   color: #333;
   overflow-x: hidden;
   line-height: 1.6;
+  /* Tối ưu touch scrolling */
+  touch-action: pan-y;
+  /* Giảm lag khi scroll trên mobile */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 /* Hero Section */
@@ -42,6 +49,9 @@ body {
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
+  /* Tối ưu touch scrolling */
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .hero::before {
@@ -640,8 +650,44 @@ section {
   min-height: 150px;
 }
 
-/* Mobile Gallery Layout */
+/* Mobile Gallery Layout - Tối ưu scroll performance */
 @media (max-width: 768px) {
+  /* Tối ưu scroll trên mobile */
+  html {
+    scroll-behavior: auto !important; /* Tắt smooth scroll trên mobile để mượt hơn */
+  }
+  
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    /* Tắt các hiệu ứng không cần thiết */
+    transform: translateZ(0);
+  }
+  
+  /* Tắt parallax và các hiệu ứng phức tạp */
+  .hero {
+    transform: translate3d(0, 0, 0) !important;
+    will-change: auto !important;
+    transition: none !important;
+  }
+  
+  section {
+    transform: translate3d(0, 0, 0) !important;
+    will-change: auto !important;
+    transition: none !important; /* Tắt transition trên mobile để mượt hơn */
+  }
+  
+  /* Tối ưu các elements khác */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Giảm animation trên mobile */
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
   .gallery-layout {
     padding: 0 5px;
   }
@@ -1025,6 +1071,9 @@ footer {
     padding: 40px 15px;
     min-height: auto;
     padding-top: 60px;
+    /* Tắt parallax trên mobile */
+    transform: translate3d(0, 0, 0) !important;
+    will-change: auto;
   }
   
   .avatar-wrapper {
@@ -1034,6 +1083,9 @@ footer {
   
   section {
     padding: 40px 15px;
+    /* Tối ưu cho mobile */
+    transform: translate3d(0, 0, 0);
+    will-change: auto;
   }
   
   .info {
